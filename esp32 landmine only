@@ -1,0 +1,46 @@
+https://dl.espressif.com/dl/package_esp32_index.json(additonal board)
+ connection:
+ | Component     | ESP32 Pin                     |
+| ------------- | ----------------------------- |
+| Sensor `+`    | 3.3V (or 5V if module allows) |
+| Sensor `-`    | GND                           |
+| Sensor `OUT`  | GPIO 34 (digital input)       |
+| Red LED (+)   | GPIO 25 (via 220Ω resistor)   |
+| Green LED (+) | GPIO 26 (via 220Ω resistor)   |
+| Both LED (–)  | GND                           |
+
+ coding:
+ int sensorPin = 34;   // OUT pin of sensor
+int redLed = 25;      // Red LED pin
+int greenLed = 26;    // Green LED pin
+int sensorState = 0;
+
+void setup() {
+  Serial.begin(115200);
+
+  pinMode(sensorPin, INPUT);
+  pinMode(redLed, OUTPUT);
+  pinMode(greenLed, OUTPUT);
+
+  // Start with LEDs OFF
+  digitalWrite(redLed, LOW);
+  digitalWrite(greenLed, HIGH);  // Green ON initially (no metal)
+}
+
+void loop() {
+  sensorState = digitalRead(sensorPin);
+
+  if (sensorState == HIGH) {
+    // Metal detected
+    digitalWrite(redLed, HIGH);
+    digitalWrite(greenLed, LOW);
+    Serial.println("Metal Detected");
+  } else {
+    // No metal
+    digitalWrite(redLed, LOW);
+    digitalWrite(greenLed, HIGH);
+    Serial.println("No Metal");
+  }
+
+  delay(200);
+}
